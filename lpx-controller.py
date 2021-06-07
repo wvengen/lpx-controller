@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from mididings import *
 from mididings.event import CtrlEvent
+from sequencer import OSCInterface
 
 LPX_PORT_NAME_IN = 'Launchpad X in'
 LPX_PORT_NAME_OUT = 'Launchpad X out'
@@ -62,7 +63,6 @@ def LPXSetupMixers(orientation, polarity, cc, color):
 
     return SysEx([0xf0, 0x00, 0x20, 0x29, 0x02, 0x0c, 0x01, 0x00, orientation] + mixers + [0xf7]) >> LPX()
 
-
 config(
     backend = "alsa",
     client_name = "Launchpad X Helper",
@@ -76,6 +76,10 @@ config(
     ],
     initial_scene = 2,
 )
+
+# TODO only on request from command-line
+osc = OSCInterface()
+hook(osc)
 
 # store state of right buttons sent by the controller (to restore after mixer mode)
 btn_state_ccs = [89, 79, 69, 59, 49, 39, 29, 19]
@@ -160,6 +164,7 @@ run(
             Init([LPXDawMode(1), LPXSelectLayout(0)]), # TODO only send once
             LPXButtonFilter(95) >> SceneSwitch(3),
             NormalMain(),
+            Process(osc.on_lpx_event),
         ]),
         3: SceneGroup("mixer", [
             Scene("volume", MixerMain() + MixerState(0, 0, 30, "orange") + MixerButtons(89)),
