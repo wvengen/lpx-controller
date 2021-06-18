@@ -24,7 +24,7 @@ it somewhere in your `PATH`:
 ```sh
 mkdir -p $HOME/.local.bin && \
 wget -O $HOME/.local/bin/lpx-controller \
-  https://github.com/wvengen/lpx-controller/releases/download/latest/lpx-controller-`uname -i` && \
+  https://github.com/wvengen/lpx-controller/releases/latest/download/lpx-controller-`uname -i` && \
 chmod a+x $HOME/.local/bin/lpx-controller
 ```
 
