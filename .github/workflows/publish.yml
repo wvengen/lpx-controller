@@ -1,0 +1,43 @@
+on:
+  push:
+    tags:
+      - v*
+
+name: Release
+
+jobs:
+  publish:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install dependencies
+        run: sudo apt-get install --yes --no-install-recommends libasound2-dev
+
+      - name: Run cargo build
+        uses: actions-rs/cargo@v1
+        env:
+          # strip resulting binary
+          RUSTFLAGS: '-C link-arg=-s'
+        with:
+          command: build
+          args: --release
+
+      - name: Rename target
+        run: mv target/release/lpx-controller target/release/lpx-controller-`uname -i`
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/release/lpx-controller-*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

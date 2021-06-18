@@ -17,39 +17,24 @@ MIDI learn functionality to control it with the Launchpad X.
 
 ## Install
 
-At this moment, the program uses [mididings](http://das.nasophon.de/mididings/), which unfortunately
-is not packaged as a Python package, and it was removed from
-[Debian](https://packages.debian.org/search?keywords=mididings&searchon=names&suite=all&section=all)
-and [Ubuntu](https://packages.ubuntu.com/search?keywords=mididings&searchon=names&suite=all&section=all).
+Go to [releases](https://github.com/wvengen/lpx-controller/releases) and find the latest release.
+Get the binary appropriate for your system (if you don't know, it's probably `x86_64`), and install
+it somewhere in your `PATH`:
 
-At this moment, you'll have to build it from source. For Debian/Ubuntu:
-
-```
-sudo apt install git build-essential libboost-python-dev libboost-thread-dev python3-decorator \
-                 libglib2.0-dev libasound2-dev
-git clone https://github.com/dsacre/mididings.git
-cd mididings
-python3 setup.py install --user
+```sh
+mkdir -p $HOME/.local.bin && \
+wget -O $HOME/.local/bin/lpx-controller \
+  https://github.com/wvengen/lpx-controller/releases/download/latest/lpx-controller-`uname -i` && \
+chmod a+x $HOME/.local/bin/lpx-controller
 ```
 
-If you get a failure in the last step with `cannot find -lboost_python` (and maybe a `SyntaxError`),
-try running:
-```
-sed -i "s/boost_python_suffixes\.append('3')/boost_python_suffixes.append('38')/"  setup.py
-find . -name \*.py | xargs sed -ri 's/\basync\b/asyn/g'
-python3 setup.py install --user
-```
-
-To install the program, download [`lpx-controller.py`](lpx-controller.py) e.g. to `~/.local/.bin/`:
-```
-wget -O ~/.local/bin/lpx-controller https://github.com/wvengen/lpx-controller/raw/master/lpx-controller.py
-chmod a+x ~/.local/bin/lpx-controller
-```
+Alternatively, you can clone this repository and run `cargo build --release`, after which you
+can find the binary as `target/release/lpx-controller`. See [Develop](#develop) for build requirements.
 
 ## Run
 
 1. Connect your Launchpad X to the computer.
-2. Run `lpx-controller` from the command-line. (*)
+2. Run `lpx-controller` from the command-line.
 3. You should see the _Session_ button light up.
 4. Connect your audio application to _Launchpad X Helper_'s ports named _Controller in_ and _Controller out_.
 5. When you're done, press `Ctrl-C` in the console to stop this program.
@@ -57,9 +42,6 @@ chmod a+x ~/.local/bin/lpx-controller
 Note that this program doesn't currently reconnect to the Launchpad X when you plug it in and out. You're
 probably using a patchbay application already, so you might consider including these too. A later version of
 the program could perhaps reconnect automatically (and re-initialize without having to press _Session_ again).
-
-(*) If you didn't install the program in your `PATH`, you may need to run it with `python3 lpx-controller.py`
-instead.
 
 ## Notes
 
@@ -79,6 +61,22 @@ Feel free you share your usage of this program by submitting an issue or PR.
 * [Luppp](http://openavproductions.com/luppp/) -
     with [this PR](https://github.com/openAVproductions/openAV-Luppp/pull/310)
     and [this controller definition](https://gist.github.com/wvengen/dd43cc82ad4ef425630fa290c1f2b3e9)
+
+## Develop
+
+You'll need [Rust](https://www.rust-lang.org/) 1.52.0+ with [Cargo](https://doc.rust-lang.org/cargo/).
+The easiest option to get a recent enough Rust is using [Rustup](https://rustup.rs/).
+
+You also need the ALSA headers. On Debian you would need to run `apt-get install libasound2-dev`,
+on Fedora `dnf install alsa-lib-devel`.
+
+With these in place, running a development version of lpx-controller is as easy as `cargo run`.
+
+Relevant links:
+- [RMididings](https://github.com/wvengen/rmididings), on which lpx-controller is built.
+- [mididings documentation](http://dsacre.github.io/mididings/doc/), which RMididings is inspired by.
+- [Launchpad X programmer's reference guide](https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/Launchpad%20X%20-%20Programmers%20Reference%20Manual.pdf)
+- A previous version of [lpx-controller in Python](https://github.com/wvengen/lpx-controller/tree/python).
 
 ## License
 

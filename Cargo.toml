@@ -1,0 +1,15 @@
+[package]
+name = "lpx-controller"
+version = "0.2.0"
+authors = ["wvengen"]
+
+description = "Use the full power of the Launchpad X in a Linux studio setup"
+repository = "https://github.com/wvengen/lpx-controller"
+keywords = ["MIDI", "ALSA", "music"]
+license = "GPL-3.0-or-later"
+categories = ["multimedia::audio"]
+readme = "README.md"
+edition = "2018"
+
+[dependencies]
+rmididings = "^0.1.2"
