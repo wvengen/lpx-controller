@@ -73,9 +73,10 @@ checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
 
 [[package]]
 name = "rmididings"
-version = "0.1.2"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be0caeb4de763c8101015b7fb2387327e34a7a5913712e76b4fd39bc41912077"
+checksum = "c68294a915fbac040d3c13f37a57990d9016556b5d05c965e52a374465131e3d"
 dependencies = [
  "alsa",
+ "libc",
 ]

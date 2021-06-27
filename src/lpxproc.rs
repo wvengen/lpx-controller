@@ -60,7 +60,7 @@ pub fn LPXButton<'a>(button: u32, color: LPXColor) -> FilterChain<'a> {
 
 // Filter: pass events from a specific button press on the Launchpad X
 pub fn LPXButtonFilter<'a>(button: u32) -> FilterChain<'a> {
-    Chain!(LPXFilter(), ChannelFilter(1), CtrlFilter(button), CtrlValueFilter(127))
+    Chain!(LPXFilter(), TypeFilter!(Ctrl), ChannelFilter(1), CtrlFilter(button), CtrlValueFilter(127))
 }
 
 // Generator: set session button colors. Use active=Black to reset.
@@ -111,11 +111,14 @@ impl<'a> CtrlsMemory<'a> {
 pub struct CtrlsMemoryStore<'a>(&'a [u32], &'a Vec<Cell<Option<i32>>>);
 impl<'a> FilterTrait for CtrlsMemoryStore<'a> {
     fn run(&self, evs: &mut EventStream) {
-        for ev in evs.events.iter() {
-            if ev.typ == EventType::CTRL {
-                if let Some(i) = self.0.iter().position(|&c| c == ev.ctrl) {
-                    self.1[i].set(Some(ev.value));
-                }
+        for ev in evs.iter() {
+            match ev {
+                Event::Ctrl(ev) => {
+                    if let Some(i) = self.0.iter().position(|&c| c == ev.ctrl) {
+                        self.1[i].set(Some(ev.value));
+                    }
+                },
+                _ => {},
             }
         }
     }
@@ -127,7 +130,7 @@ impl<'a> FilterTrait for CtrlsMemoryRestore<'a> {
         for i in 0..self.0.len() {
             if let Some(value) = self.1[i].get() {
                 let ctrl = self.0[i];
-                evs.events.push(CtrlEvent(0, 0, ctrl, value));
+                evs.push(CtrlEvent(0, 0, ctrl, value));
             }
         }
     }

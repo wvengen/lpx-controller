@@ -51,7 +51,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         scenes: &[
             &Scene { // 0
                 name: "init",
-                init: &Chain!(
+                init: &Fork!(
                     LPXDawMode!(1),
                     LPXSelectLayout!(0),
                     LPXSessionColor!(Black, Black),
@@ -62,7 +62,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             &Scene { // 1
                 name: "session",
                 patch: &Fork!(
-                    Chain!(LPXButtonFilter(95), SceneSwitch(2), Discard()),
+                    Chain!(LPXButtonFilter(95), SceneSwitch(2)),
                     NormalForward(&btnMem)
                 ),
                 ..Scene::default()
@@ -115,7 +115,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                         ..Scene::default()
                     }
                 ],
-                init: &Chain!(
+                init: &Fork!(
                     LPXSelectLayout!(13),
                     LPXSessionColor!(Orange, Softwhite),
                     // Setup right buttons for switching mixer subscenes.
@@ -131,13 +131,13 @@ fn run() -> Result<(), Box<dyn Error>> {
                 patch: &Fork!(
                     MixerForward(&btnMem),
                     // Switch to mixer subscene when pressing one of the four right buttons.
-                    Chain!(LPXButtonFilter(95), SceneSwitch(1), Discard()),
-                    Chain!(LPXButtonFilter(89), SubSceneSwitch(0), Discard()),
-                    Chain!(LPXButtonFilter(79), SubSceneSwitch(1), Discard()),
-                    Chain!(LPXButtonFilter(69), SubSceneSwitch(2), Discard()),
-                    Chain!(LPXButtonFilter(59), SubSceneSwitch(3), Discard())
+                    Chain!(LPXButtonFilter(95), SceneSwitch(1)),
+                    Chain!(LPXButtonFilter(89), SubSceneSwitch(0)),
+                    Chain!(LPXButtonFilter(79), SubSceneSwitch(1)),
+                    Chain!(LPXButtonFilter(69), SubSceneSwitch(2)),
+                    Chain!(LPXButtonFilter(59), SubSceneSwitch(3))
                 ),
-                exit: &Chain!(
+                exit: &Fork!(
                     LPXSessionColor!(Black, Black),
                     Chain!(btnMem.Restore(), LPX())
                 ),
@@ -146,7 +146,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             &Scene { // 3
                 name: "note",
                 patch: &Fork!(
-                    Chain!(LPXButtonFilter(95), SceneSwitch(1), Discard()),
+                    Chain!(LPXButtonFilter(95), SceneSwitch(1)),
                     NormalForward(&btnMem)
                 ),
                 ..Scene::default()
@@ -154,15 +154,15 @@ fn run() -> Result<(), Box<dyn Error>> {
             &Scene { // 4
                 name: "custom",
                 patch: &Fork!(
-                    Chain!(LPXButtonFilter(95), SceneSwitch(1), Discard()),
+                    Chain!(LPXButtonFilter(95), SceneSwitch(1)),
                     NormalForward(&btnMem)
                 ),
                 ..Scene::default()
             },
         ],
         control: &Fork!(
-            Chain!(LPXButtonFilter(96), SceneSwitch(3), Discard()),
-            Chain!(LPXButtonFilter(97), SceneSwitch(4), Discard()),
+            Chain!(LPXButtonFilter(96), SceneSwitch(3)),
+            Chain!(LPXButtonFilter(97), SceneSwitch(4)),
             // Store mixer values from both LPX and Controller.
             Chain!(ChannelFilter(5), btnMixerVol.Store(), btnMixerPan.Store(), btnMixerSdA.Store(), btnMixerSdB.Store(), Discard())
         ),

@@ -12,4 +12,4 @@ readme = "README.md"
 edition = "2018"
 
 [dependencies]
-rmididings = "^0.1.2"
+rmididings = { version = "^0.2.1", default-features = false, features = ["alsa"] }
