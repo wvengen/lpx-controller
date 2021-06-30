@@ -106,6 +106,22 @@ impl<'a> CtrlsMemory<'a> {
     pub fn Restore(&self) -> CtrlsMemoryRestore {
         CtrlsMemoryRestore(&self.ctrls, &self.values)
     }
+
+    // Directory set the memory for a specific controller value.
+    pub fn store(&self, ctrl: u32, value: Option<i32>) {
+        if let Some(index) = self.ctrls.iter().position(|&c| c == ctrl) {
+            if let Some(v) = self.values.get(index) {
+                v.set(value);
+            }
+        }
+    }
+
+    // Directly set the memory for all controller values.
+    pub fn store_all(&self, value: Option<i32>) {
+        for v in self.values.iter() {
+            v.set(value);
+        }
+    }
 }
 
 pub struct CtrlsMemoryStore<'a>(&'a [u32], &'a Vec<Cell<Option<i32>>>);

@@ -46,6 +46,8 @@ fn run() -> Result<(), Box<dyn Error>> {
     let btnMixerPan = CtrlsMemory::new(&[38, 39, 40, 41, 42, 43, 44, 45], Some(Black as i32));
     let btnMixerSdA = CtrlsMemory::new(&[46, 47, 48, 49, 50, 51, 52, 53], Some(Black as i32));
     let btnMixerSdB = CtrlsMemory::new(&[54, 55, 56, 57, 58, 59, 60, 61], Some(Black as i32));
+    // The default of 0 is fine, except for pan, which we want to start in the middle.
+    btnMixerPan.store_all(Some(63));
 
     md.run(RunArguments {
         scenes: &[
