@@ -1,6 +1,6 @@
 [package]
 name = "lpx-controller"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["wvengen"]
 
 description = "Use the full power of the Launchpad X in a Linux studio setup"
